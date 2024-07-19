@@ -12,7 +12,6 @@ const App: React.FC = () => {
     const [gameOver, setGameOver] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [guessNumber, setGuessNumber] = useState<number>(1);
-    const [requestHistory, setRequestHistory] = useState<WordleRequestItem[]>([]);
     const [responseHistory, setResponseHistory] = useState<Array<{ guessNumber: number; wordToGuess: string; response: Array<{ letter: string; color: string }> }>>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [win, setWin] = useState<boolean>(false);
@@ -23,7 +22,6 @@ const App: React.FC = () => {
             const parsedState = JSON.parse(savedState);
             setSuggestedWord(parsedState.suggestedWord);
             setGuessNumber(parsedState.guessNumber);
-            setRequestHistory(parsedState.requestHistory);
             setResponseHistory(parsedState.responseHistory);
             setGameOver(parsedState.gameOver);
             setLoading(false); // Stop loading since the state is restored
@@ -56,7 +54,6 @@ const App: React.FC = () => {
                 setGameOver(true);
             }else {
                 setSuggestedWord(data.guess);
-                setRequestHistory(newRequestHistory);
                 setResponseHistory(newResponseHistory);
                 setGuessNumber(2);
 
@@ -95,7 +92,6 @@ const App: React.FC = () => {
                 setGameOver(true);
             } else {
                 setSuggestedWord(data.guess);
-                setRequestHistory(newRequestHistory);
                 setResponseHistory(newResponseHistory);
                 setGuessNumber(guessNumber + 1);
 
