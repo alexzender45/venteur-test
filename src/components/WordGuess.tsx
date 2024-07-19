@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, TextField, Select, MenuItem, FormControl, InputLabel, Button, CircularProgress } from '@mui/material';
+import { Box, Grid, TextField, Select, MenuItem, FormControl, Button, CircularProgress } from '@mui/material';
 
 interface WordleGuessProps {
     guessNumber: number;
