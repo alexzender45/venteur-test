@@ -33,7 +33,7 @@ const App: React.FC = () => {
                 console.log(r)
             );
         }
-    }, []);
+    }, [setRequestHistory]);
 
     const saveStateToLocalStorage = (state: any) => {
         localStorage.setItem('wordleState', JSON.stringify(state));
