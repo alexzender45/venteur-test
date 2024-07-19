@@ -12,58 +12,17 @@ const App: React.FC = () => {
     const [gameOver, setGameOver] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [guessNumber, setGuessNumber] = useState<number>(1);
-    const [setRequestHistory] = useState<WordleRequestItem[]>([]);
+    const [requestHistory, setRequestHistory] = useState<WordleRequestItem[]>([]);
     const [responseHistory, setResponseHistory] = useState<Array<{ guessNumber: number; wordToGuess: string; response: Array<{ letter: string; color: string }> }>>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [win, setWin] = useState<boolean>(false);
 
-    // @ts-ignore
     useEffect(() => {
-        const handleInitialSubmit = async () => {
-            setLoading(true);
-            try {
-                const clue = 'gxyxx';
-                const currentRequest: WordleRequestItem = {
-                    word: initialWord,
-                    clue: clue
-                };
-                const newRequestHistory = [currentRequest];
-                const newResponseHistory = [{
-                    guessNumber: 1,
-                    wordToGuess: initialWord,
-                    response: initialWord.split('').map((letter, index) => ({ letter, color: clue[index] }))
-                }];
-
-                const data = await fetchWordleResult(newRequestHistory);
-                if (data.guess === 'WIN') {
-                    setGameOver(true);
-                }else {
-                    setSuggestedWord(data.guess);
-                    // @ts-ignore
-                    setRequestHistory(newRequestHistory);
-                    setResponseHistory(newResponseHistory);
-                    setGuessNumber(2);
-
-                    saveStateToLocalStorage({
-                        suggestedWord: data.guess,
-                        guessNumber: 2,
-                        requestHistory: newRequestHistory,
-                        responseHistory: newResponseHistory,
-                        gameOver: false,
-                    });
-                }
-            } catch (err:any) {
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
         const savedState = localStorage.getItem('wordleState');
         if (savedState) {
             const parsedState = JSON.parse(savedState);
             setSuggestedWord(parsedState.suggestedWord);
             setGuessNumber(parsedState.guessNumber);
-            // @ts-ignore
             setRequestHistory(parsedState.requestHistory);
             setResponseHistory(parsedState.responseHistory);
             setGameOver(parsedState.gameOver);
@@ -71,10 +30,49 @@ const App: React.FC = () => {
         } else {
             handleInitialSubmit();
         }
-    }, [initialWord,setRequestHistory]);
+    }, []);
 
     const saveStateToLocalStorage = (state: any) => {
         localStorage.setItem('wordleState', JSON.stringify(state));
+    };
+
+    const handleInitialSubmit = async () => {
+        setLoading(true);
+        try {
+            const clue = 'gxyxx';
+            const currentRequest: WordleRequestItem = {
+                word: initialWord,
+                clue: clue
+            };
+            const newRequestHistory = [currentRequest];
+            const newResponseHistory = [{
+                guessNumber: 1,
+                wordToGuess: initialWord,
+                response: initialWord.split('').map((letter, index) => ({ letter, color: clue[index] }))
+            }];
+
+            const data = await fetchWordleResult(newRequestHistory);
+            if (data.guess === 'WIN') {
+                setGameOver(true);
+            }else {
+                setSuggestedWord(data.guess);
+                setRequestHistory(newRequestHistory);
+                setResponseHistory(newResponseHistory);
+                setGuessNumber(2);
+
+                saveStateToLocalStorage({
+                    suggestedWord: data.guess,
+                    guessNumber: 2,
+                    requestHistory: newRequestHistory,
+                    responseHistory: newResponseHistory,
+                    gameOver: false,
+                });
+            }
+        } catch (err:any) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleClueSubmit = async (clues: Array<{ letter: string; color: string }>) => {
@@ -97,7 +95,6 @@ const App: React.FC = () => {
                 setGameOver(true);
             } else {
                 setSuggestedWord(data.guess);
-                // @ts-ignore
                 setRequestHistory(newRequestHistory);
                 setResponseHistory(newResponseHistory);
                 setGuessNumber(guessNumber + 1);
@@ -154,7 +151,7 @@ const App: React.FC = () => {
                 )}
                 {
                     gameOver && win ? gameOver && <Alert severity="success" sx={{ mt: 2 }}>Yay! All Done</Alert>
-                    : gameOver && <Alert severity="error" sx={{ mt: 2 }}>Game Over</Alert>
+                        : gameOver && <Alert severity="error" sx={{ mt: 2 }}>Game Over</Alert>
                 }
                 {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
             </Container>
