@@ -71,7 +71,7 @@ const App: React.FC = () => {
         } else {
             handleInitialSubmit();
         }
-    }, [initialWord]);
+    }, [initialWord,setRequestHistory]);
 
     const saveStateToLocalStorage = (state: any) => {
         localStorage.setItem('wordleState', JSON.stringify(state));
