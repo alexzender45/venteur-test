@@ -17,28 +17,6 @@ const App: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [win, setWin] = useState<boolean>(false);
 
-    useEffect(() => {
-        const savedState = localStorage.getItem('wordleState');
-        if (savedState) {
-            const parsedState = JSON.parse(savedState);
-            setSuggestedWord(parsedState.suggestedWord);
-            setGuessNumber(parsedState.guessNumber);
-            // @ts-ignore
-            setRequestHistory(parsedState.requestHistory);
-            setResponseHistory(parsedState.responseHistory);
-            setGameOver(parsedState.gameOver);
-            setLoading(false); // Stop loading since the state is restored
-        } else {
-            handleInitialSubmit().then(r =>
-                console.log(r)
-            );
-        }
-    }, [setRequestHistory]);
-
-    const saveStateToLocalStorage = (state: any) => {
-        localStorage.setItem('wordleState', JSON.stringify(state));
-    };
-
     const handleInitialSubmit = async () => {
         setLoading(true);
         try {
@@ -77,6 +55,26 @@ const App: React.FC = () => {
         } finally {
             setLoading(false);
         }
+    };
+    // @ts-ignore
+    useEffect(() => {
+        const savedState = localStorage.getItem('wordleState');
+        if (savedState) {
+            const parsedState = JSON.parse(savedState);
+            setSuggestedWord(parsedState.suggestedWord);
+            setGuessNumber(parsedState.guessNumber);
+            // @ts-ignore
+            setRequestHistory(parsedState.requestHistory);
+            setResponseHistory(parsedState.responseHistory);
+            setGameOver(parsedState.gameOver);
+            setLoading(false); // Stop loading since the state is restored
+        } else {
+            handleInitialSubmit().then(r => console.log(r));
+        }
+    }, [setRequestHistory,handleInitialSubmit]);
+
+    const saveStateToLocalStorage = (state: any) => {
+        localStorage.setItem('wordleState', JSON.stringify(state));
     };
 
     const handleClueSubmit = async (clues: Array<{ letter: string; color: string }>) => {
