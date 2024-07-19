@@ -12,6 +12,7 @@ const App: React.FC = () => {
     const [gameOver, setGameOver] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [guessNumber, setGuessNumber] = useState<number>(1);
+    const [setRequestHistory] = useState<WordleRequestItem[]>([]);
     const [responseHistory, setResponseHistory] = useState<Array<{ guessNumber: number; wordToGuess: string; response: Array<{ letter: string; color: string }> }>>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [win, setWin] = useState<boolean>(false);
@@ -22,6 +23,7 @@ const App: React.FC = () => {
             const parsedState = JSON.parse(savedState);
             setSuggestedWord(parsedState.suggestedWord);
             setGuessNumber(parsedState.guessNumber);
+            // @ts-ignore
             setRequestHistory(parsedState.requestHistory);
             setResponseHistory(parsedState.responseHistory);
             setGameOver(parsedState.gameOver);
@@ -57,6 +59,7 @@ const App: React.FC = () => {
                 setGameOver(true);
             }else {
                 setSuggestedWord(data.guess);
+                // @ts-ignore
                 setRequestHistory(newRequestHistory);
                 setResponseHistory(newResponseHistory);
                 setGuessNumber(2);
@@ -96,6 +99,7 @@ const App: React.FC = () => {
                 setGameOver(true);
             } else {
                 setSuggestedWord(data.guess);
+                // @ts-ignore
                 setRequestHistory(newRequestHistory);
                 setResponseHistory(newResponseHistory);
                 setGuessNumber(guessNumber + 1);
