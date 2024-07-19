@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, CircularProgress, Alert, Box } from '@mui/material';
-import WordleGuess from './components/WordleGuess';
+import WordleGuess from './components/WordGuess';
 import { fetchWordleResult, WordleRequestItem } from './api/api';
 import Layout from './components/Layout';
 import Header from './components/Header';
